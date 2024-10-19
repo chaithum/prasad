@@ -1,6 +1,6 @@
 import Carousel from 'react-bootstrap/Carousel';
 import React, { useState, } from "react";
-// import { useNavigate } from "react-router-dom";
+ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import config from '../config';
  
@@ -18,16 +18,17 @@ import {
 
 const AddRestaurant=()=>{
     // const classes = useStyles();
-    // const navigate = useNavigate();
+    //  const navigate = useNavigate();
     const [inputs, setInputs] = useState({
-        restid:(Math.random())*100, 
-        restaurent_name: "",
-        Area: "",
+      restid:Math.round((Math.random())*100),
+        restaurent_name:"",
+        Area:"",
         city:"",
         zipcode:"",
-        formFileMultiple: "",
+        imageURL:"",
         contact_number:"",
-        Description:""
+        Description:"",
+        state:""
     });
    
     const handleChange = (e) => {
@@ -38,24 +39,25 @@ const AddRestaurant=()=>{
       };
       const sendRequest = async () => {
      
-        const res = await axios
+        await axios
           .post(`${config.BASE_URL}/api/restaurant/add`, {
-            title: inputs.title,
-            desc: inputs.Description,
-            img: inputs.imageURL,
-            user: localStorage.getItem("userId"),
-          })
+            restaurent_name: inputs.name,
+            imageURL: inputs.imageURL,
+            Area: inputs.Area,
+            city: inputs.city,
+            zipcode: inputs.zipcode,
+            contact_number: inputs.contact_number,
+            Description: inputs.Description,
+            state: inputs.state
+           
+          }).then(console.log())
           .catch((err) => console.log(err));
-        const data = await res.data;
-        return data;
+        
       };
       const handleSubmit = (e) => {
         
         e.preventDefault();
-        console.log(inputs);
         sendRequest()
-          .then((data) => console.log(data))
-          // .then(() => navigate("/home"));
       };
  
     return(
@@ -116,7 +118,7 @@ const AddRestaurant=()=>{
            
             <div className="mb-4">
               <MDBInput
-            //    onChange={handleChange}
+               onChange={handleChange}
                 label="Restaurant Name"
                 id="restaurent_name"
                 type="text"
@@ -124,7 +126,7 @@ const AddRestaurant=()=>{
                 style={{ backgroundColor: '#f0f8ff' }} // Light background
               />
             </div>
-
+{/* 
             <div className='d-flex justify-content-around'>
              <p class="text-left">Address</p>
             <MDBInput name='city' placeholder='cityname' type="text" style={{ backgroundColor: '#f0f8ff' }}/>
@@ -133,39 +135,50 @@ const AddRestaurant=()=>{
            
             </div>
  
-            <br/>
-            {/* <div className="mb-4">
+            <br/> */} 
+
+            <div className="mb-4">
+            <MDBInput 
+             
+             onChange={handleChange}
+              label="Area"
+              id="Area"
+              type="text"
+              className="form-control"
+              style={{ backgroundColor: '#f0f8ff' }} // Light background
+              />
               <MDBInput 
              
-            //    onChange={handleChange}
+               onChange={handleChange}
                 label="City"
                 id="city"
                 type="text"
                 className="form-control"
                 style={{ backgroundColor: '#f0f8ff' }} // Light background
-           
-               //    onChange={handleChange}
+                />
+                 <MDBInput 
+                   onChange={handleChange}
                 label="State"
                 id="state"
                 type="text"
                 className="form-control"
                 style={{ backgroundColor: '#f0f8ff' }} // Light background
-            
-           
-            //    onChange={handleChange}
-                label="Zip-code"
-                id="zip-code"
+            />
+                <MDBInput 
+               onChange={handleChange}
+                label="Zipcode"
+                id="zipcode"
                 type="number"
                 className="form-control"
                 style={{ backgroundColor: '#f0f8ff' }} // Light background
 
                 
               />
-            </div> */}
+            </div>
  
             <div className="mb-4">
               <MDBInput
-            //    onChange={handleChange}
+                onChange={handleChange}
                 label='Contact Number'
                 id="contact_number"
                 type="tel"
@@ -177,7 +190,7 @@ const AddRestaurant=()=>{
             <div className="mb-4">
             <MDBFile
             label='Default file input example'  
-            id='formFileMultiple'
+            id='imageURL'
             className="form-control"
             style={{ backgroundColor: '#f0f8ff' }}
              />
@@ -185,7 +198,7 @@ const AddRestaurant=()=>{
  
             <div className="mb-4">
               <MDBTextArea
-            //    onChange={handleChange}
+               onChange={handleChange}
                 label="Description"
                 id="Description"
                 type="Description"
@@ -195,7 +208,7 @@ const AddRestaurant=()=>{
             </div>
  
             {/* Submit Button */}
-            <MDBBtn color="primary" type="submit">
+            <MDBBtn color="primary" onClick={handleSubmit} type="submit">
           Add
             </MDBBtn>
           </form>
